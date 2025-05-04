@@ -1,6 +1,5 @@
 from knn import classify_nn
 from nb import classify_nb
-from collections import Counter
 import os
 
 def classify_ensemble(training_file, testing_file, k1, k2):
@@ -21,21 +20,22 @@ def classify_ensemble(training_file, testing_file, k1, k2):
     knn2_predictions = classify_nn(training_file, testing_file, k2)
     nb_predictions = classify_nb(training_file, testing_file)
 
-    # Combine predictions through majority voting
+    # Combine predictions through majority voting without Counter
     ensemble_predictions = []
-    for i in range(len(knn1_predictions)):
-        votes = [knn1_predictions[i], knn2_predictions[i], nb_predictions[i]]
-        vote_counts = Counter(votes)
-        
-        # Majority wins, ties → "yes"
-        if vote_counts['yes'] >= vote_counts['no']:
+    for p1, p2, p3 in zip(knn1_predictions, knn2_predictions, nb_predictions):
+        # Count votes
+        yes_votes = [p1, p2, p3].count('yes')
+        no_votes = 3 - yes_votes  # total votes minus yes votes
+
+        # Majority wins, ties → 'yes'
+        if yes_votes >= no_votes:
             ensemble_predictions.append('yes')
         else:
             ensemble_predictions.append('no')
 
-    return ensemble_predictions 
+    return ensemble_predictions
   
-  
+
 def main():
     print("Starting ensemble classification...")
     
@@ -45,15 +45,16 @@ def main():
     print(f"Generated {len(predictions)} predictions")
     
     # Create directory if it doesn't exist
-    os.makedirs('data/test/occupancy', exist_ok=True)
-    print(f"Saving predictions to data/test/occupancy/predicitons.txt")
+    output_dir = 'data/test/occupancy'
+    os.makedirs(output_dir, exist_ok=True)
+    output_file = os.path.join(output_dir, 'predictions.txt')
+    print(f"Saving predictions to {output_file}")
     
     # Save predictions to file
-    with open('data/test/occupancy/predicitons.txt', "w+") as f:
-        for prediction in predictions:
-            f.write(f"{prediction}\n")
+    with open(output_file, "w+") as f:
+        for pred in predictions:
+            f.write(f"{pred}\n")
     print("Predictions saved successfully")
     
 if __name__ == "__main__":
-  main()
-    
+    main()
