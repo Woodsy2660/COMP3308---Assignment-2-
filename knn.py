@@ -1,6 +1,6 @@
 # knn.py
 
-from utils import load_training_data, load_testing_data, calculate_euclidean_distance
+from utilities import load_training_data, load_testing_data, calculate_euclidean_distance
 from collections import Counter
 
 def classify_nn(training_file, testing_file, k):

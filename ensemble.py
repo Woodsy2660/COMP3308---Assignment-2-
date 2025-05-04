@@ -1,8 +1,7 @@
-# ensemble.py
-
 from knn import classify_nn
 from nb import classify_nb
 from collections import Counter
+import os
 
 def classify_ensemble(training_file, testing_file, k1, k2):
     """
@@ -35,3 +34,26 @@ def classify_ensemble(training_file, testing_file, k1, k2):
             ensemble_predictions.append('no')
 
     return ensemble_predictions 
+  
+  
+def main():
+    print("Starting ensemble classification...")
+    
+    # Get predictions from ensemble classifier
+    print("Running ensemble classifier with k1=3, k2=5...")
+    predictions = classify_ensemble('data/test/occupancy.csv', 'data/test/pima.csv', 3, 5)
+    print(f"Generated {len(predictions)} predictions")
+    
+    # Create directory if it doesn't exist
+    os.makedirs('data/test/occupancy', exist_ok=True)
+    print(f"Saving predictions to data/test/occupancy/predicitons.txt")
+    
+    # Save predictions to file
+    with open('data/test/occupancy/predicitons.txt', "w+") as f:
+        for prediction in predictions:
+            f.write(f"{prediction}\n")
+    print("Predictions saved successfully")
+    
+if __name__ == "__main__":
+  main()
+    

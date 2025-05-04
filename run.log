@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/10_fold_stratification.py", line 1, in <module>
+    import pandas as pd
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/__init__.py", line 49, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/api.py", line 47, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/groupby/__init__.py", line 1, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/groupby/generic.py", line 68, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/frame.py", line 149, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/generic.py", line 193, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/window/__init__.py", line 1, in <module>
+  File "/Users/tarekfahmi/Documents/Academic/Computer Science/CS - Y3/COMP3308/A2/COMP3308---Assignment-2-/.venv/lib/python3.13/site-packages/pandas/core/window/ewm.py", line 24, in <module>
+ModuleNotFoundError: No module named 'pandas.core.indexers.objects'
