@@ -1,58 +1,62 @@
+# create_pima_folds.py
+
 import pandas as pd
-import time
-from sklearn.model_selection import StratifiedKFold
+import numpy as np
 
-def create_stratified_folds(
-    input_csv: str,
-    output_csv: str,
-    n_splits: int = 10,
-    shuffle: bool = True,
-    random_state: int = 42,
-    header: int | None = None
-) -> None:
+# Specify input and output paths directly in the code\ nINPUT_CSV = 'pima.csv'
+OUTPUT_CSV = 'pima-folds.csv'
+
+
+def get_stratified_fold_indices(y, n_splits=10, shuffle=True, seed=42):
     """
-    Reads the Pima CSV, splits it into stratified folds, and writes them out in the
-    ED-friendly format (fold1...foldN headings, rows, blank line).
-
-    This optimized version uses pandas.to_csv to speed up writing.
+    Partition indices 0…len(y)-1 into n_splits folds so that
+    each fold has (approximately) the same class distribution as y.
     """
-    # Measure total operation time
-    total_start = time.time()
+    rng = np.random.RandomState(seed)
+    classes = np.unique(y)
+    # collect indices per class
+    cls2idx = {cls: np.where(y == cls)[0] for cls in classes}
+    if shuffle:
+        for idxs in cls2idx.values():
+            rng.shuffle(idxs)
+    # round-robin assignment
+    folds = [[] for _ in range(n_splits)]
+    for cls in classes:
+        for i, idx in enumerate(cls2idx[cls]):
+            folds[i % n_splits].append(idx)
+    return [np.array(fold, dtype=int) for fold in folds]
 
-    # Load data
-    read_start = time.time()
-    df = pd.read_csv(input_csv, header=header)
-    print(f"Loaded data from '{input_csv}' with shape {df.shape} in {time.time() - read_start:.2f}s", flush=True)
 
-    X = df.iloc[:, :-1]
-    y = df.iloc[:,  -1]
+def write_folds(df, folds, output_path):
+    """
+    Write folds to a single CSV in the form:
+      fold1
+      <csv rows>
 
-    # Prepare stratified splitter
-    skf = StratifiedKFold(
-        n_splits=n_splits,
-        shuffle=shuffle,
-        random_state=random_state
-    )
-    print(f"Initialized StratifiedKFold with n_splits={n_splits}, shuffle={shuffle}, random_state={random_state}", flush=True)
+      fold2
+      <csv rows>
 
-    # Write out each fold using pandas.to_csv for speed
-    with open(output_csv, 'w') as out:
-        for fold_num, (_, test_idx) in enumerate(skf.split(X, y), start=1):
-            fold_start = time.time()
-            fold_df = df.iloc[test_idx]
-            print(f"Processing fold {fold_num} with {len(test_idx)} samples...", flush=True)
+      …
+    """
+    with open(output_path, "w") as out:
+        for i, idxs in enumerate(folds, start=1):
+            out.write(f"fold{i}\n")
+            df.iloc[idxs].to_csv(out, header=False, index=False)
+            out.write("\n")
 
-            # Write fold header
-            out.write(f'fold{fold_num}\n')
-            # Write all rows for this fold at once
-            fold_df.to_csv(out, header=False, index=False)
-            out.write('\n')
 
-            print(f"  -> Fold {fold_num} written in {time.time() - fold_start:.2f}s", flush=True)
-
-    print(f"All folds written to '{output_csv}' in {time.time() - total_start:.2f}s", flush=True)
+def genereate_folds(input):
+    # load the Pima dataset; assumes last column is the binary target (yes/no or 1/0)
+    df = pd.read_csv(input)
+    y = df.iloc[:, -1].values
+    folds = get_stratified_fold_indices(y, n_splits=10, shuffle=True, seed=42)
+    write_folds(df, folds, OUTPUT_CSV)
+    print(f"Wrote 10 stratified folds to '{OUTPUT_CSV}'")
+    
+def main():
+    genereate_folds("")
+    genereate_folds("")
 
 
 if __name__ == "__main__":
-    print("Starting stratified folds creation...", flush=True)
-    create_stratified_folds(input_csv='data/train/occupancy.csv',output_csv='data/stratification/occupancy-folds.csv',n_splits=10,shuffle=True,random_state=42,header=None)
+    main()
