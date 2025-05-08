@@ -3,9 +3,6 @@
 import pandas as pd
 import numpy as np
 
-# Specify input and output paths directly in the code\ nINPUT_CSV = 'pima.csv'
-OUTPUT_CSV = 'pima-folds.csv'
-
 
 def get_stratified_fold_indices(y, n_splits=10, shuffle=True, seed=42):
     """
@@ -50,8 +47,7 @@ def genereate_folds(input):
     df = pd.read_csv(input)
     y = df.iloc[:, -1].values
     folds = get_stratified_fold_indices(y, n_splits=10, shuffle=True, seed=42)
-    write_folds(df, folds, input + "-folds.csv")
-    print(f"Wrote 10 stratified folds to '{OUTPUT_CSV}'")
+    write_folds(df, folds, OUTPUT_CSV)
     
 def main():
     genereate_folds("")
