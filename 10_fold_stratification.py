@@ -51,7 +51,6 @@ def genereate_folds(input):
     y = df.iloc[:, -1].values
     folds = get_stratified_fold_indices(y, n_splits=10, shuffle=True, seed=42)
     write_folds(df, folds, input + "-folds.csv")
-    print(f"Wrote 10 stratified folds to '{OUTPUT_CSV}'")
     
 def main():
     genereate_folds("")
