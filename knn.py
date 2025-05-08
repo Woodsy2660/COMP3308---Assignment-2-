@@ -1,6 +1,6 @@
 # knn.py
 
-from utilities import load_training_data, load_testing_data, calculate_euclidean_distance
+from utils import load_training_data, load_testing_data, calculate_euclidean_distance
 from collections import Counter
 
 def classify_nn(training_file, testing_file, k):
@@ -40,4 +40,4 @@ def classify_nn(training_file, testing_file, k):
         else:
             predicted_labels.append('no')
 
-    return predicted_labels 
+    return predicted_labels
